@@ -1,0 +1,9 @@
+# firefox 
+geckodriver.log
+
+# python
+*.pyc
+.pytest_cache/
+
+# venv
+.venv/

@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "obey-the-testing-goat"
+version = "0.1.0"
+description = "Yinwei (Charlie) Zhang's walkthrough of Harry Percival's TDD Development book."
+authors = ["Charlie Zhang <yinwei.c.zhang@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+django = "1.11"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0" 
+selenium = "^3"
