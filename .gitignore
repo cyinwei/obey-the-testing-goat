@@ -1,6 +1,9 @@
 # firefox 
 geckodriver.log
 
+# django
+*.sqlite3
+
 # python
 *.pyc
 .pytest_cache/
