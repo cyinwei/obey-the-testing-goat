@@ -14,9 +14,10 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000')
 
         # He looks as the title and confirms he's on the right URL
-        assert 'Awesome ToDo' in self.browser.title
+        assert 'Awesome To-Do Lists' in self.browser.title
 
         # Kobe sees an invitation to enter a ToDo task
+        self.fail('Finish the functional tests!')
 
         # He types "become governor of California" into a text box as a task
 
