@@ -1,5 +1,7 @@
-from selenium import webdriver
 import unittest
+import time
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 class NewVisitorTest(unittest.TestCase):
     def setUp(self):
@@ -14,18 +16,34 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.get('http://localhost:8000')
 
         # He looks as the title and confirms he's on the right URL
-        assert 'Awesome To-Do Lists' in self.browser.title
+        self.assertIn('Awesome To-Do Lists', self.browser.title)
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('Awesome To-Do Lists', header_text)
 
         # Kobe sees an invitation to enter a ToDo task
-        self.fail('Finish the functional tests!')
+        inputbox = self.browser.find_element_by_id('new-todo-item-input')
+        self.assertEqual(
+            inputbox.get_attribute('placeholder'),
+            'Enter the vision you wish to bring to reality'
+        )
+        # He types "Become governor of California" into a text box as a task
+        inputbox.send_keys('Become governor of California')
 
-        # He types "become governor of California" into a text box as a task
+        # He submits the tasl
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # After submitting, he sees an updated ToDo list that looks like
         # "1: Become governor of California" as an item in a to-do list
+        table = self.browser.find_element_by_id('todo-list')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(row.text == '1: Become governor of California' for row in rows)
+        )
 
         # There's a still input following the item.  Kobe then enters
         # "Become president of the United States"
+        self.fail('Finish the functional tests!')
 
         # Kobe wonders whether the site will remember his list. Then he sees
         # that the site has generated a unique URL for him -- there is some
