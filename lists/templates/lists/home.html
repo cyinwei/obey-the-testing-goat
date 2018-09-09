@@ -4,9 +4,14 @@
     </head>
     <body>
         <h1>Awesome To-Do Lists!</h1>
-        <input id="new-todo-item-input"
-               placeholder="Enter the vision you wish to bring to reality" />
-        <table id="todo-list">
+        <form method="POST">
+            <input id="id-new-todo-item-input"
+                   name="new-todo-item-text"
+                   placeholder="Enter the vision you wish to bring to reality" />
+            {% csrf_token %}
+        </form>
+        <table id="id-todo-list">
+            <tr><td>1. {{todo_item_text}}</td></tr>
         </table>
     </body>
 </html>

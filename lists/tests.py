@@ -1,12 +1,14 @@
 from django.test import TestCase
-from django.urls import resolve
-from django.http import HttpRequest
-from django.template.loader import render_to_string
 
-from lists.views import home_page
 
 class HomePageTest(TestCase):
-
     def test_home_page_matches_template(self):
         response = self.client.get('/')
+        self.assertTemplateUsed(response, 'lists/home.html')
+
+    def test_saves_a_POST_request(self):
+        response = self.client.post(
+            '/', data={'new-todo-item-text': 'make breakfast'})
+
+        self.assertIn('make breakfast', response.content.decode('utf-8'))
         self.assertTemplateUsed(response, 'lists/home.html')

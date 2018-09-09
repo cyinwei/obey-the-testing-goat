@@ -11,3 +11,7 @@ django = "1.11"
 [tool.poetry.dev-dependencies]
 pytest = "^3.0" 
 selenium = "^3"
+importmagic = "^0.1.7"
+epc = "^0.0.5"
+yapf = "^0.23.0"
+flake8 = "^3.5"
