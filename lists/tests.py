@@ -7,16 +7,17 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'lists/home.html')
 
-    def test_displays_data_from_a_POST_request(self):
-        response = self.client.post(
-            '/', data={'new-todo-item': 'make breakfast'})
-
-        self.assertIn('make breakfast', response.content.decode('utf-8'))
-        self.assertTemplateUsed(response, 'lists/home.html')
-
     def test_saves_items_only_if_necessary(self):
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
+
+    def test_displays_all_tasks(self):
+        Item.objects.create(text='make breakfast')
+        Item.objects.create(text='learn TDD')
+
+        response = self.client.get('/')
+        self.assertIn('make breakfast', response.content.decode('utf-8'))
+        self.assertIn('learn TDD', response.content.decode('utf-8'))
 
 
 class ItemModelTest(TestCase):
@@ -38,12 +39,14 @@ class ItemModelTest(TestCase):
         self.assertEqual(second_saved_item.text, 'The second item')
 
     def test_can_save_a_POST_request_to_db(self):
-        response = self.client.post(
-            '/', data={'new-todo-item': 'A new todo task'})
+        self.client.post('/', data={'new-todo-item': 'A new todo task'})
 
         self.assertEqual(Item.objects.count(), 1)
         newly_added_item = Item.objects.first()
         self.assertEqual(newly_added_item.text, 'A new todo task')
 
+    def test_request_redirects_after_POST(self):
+        response = self.client.post(
+            '/', data={'new-todo-item': 'The second todo task'})
         self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(response['location'], '/')
+        self.assertEqual(response['location'], '/')
