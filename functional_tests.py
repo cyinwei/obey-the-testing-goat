@@ -52,6 +52,7 @@ class NewVisitorTest(unittest.TestCase):
         # his next task.
         self.submit_todo_task('Become president of the United States')
 
+
         # He sees the new entry on the ToDo list after the page refreshes
         self.check_for_task_in_todo_list(
             '2. Become president of the United States')
