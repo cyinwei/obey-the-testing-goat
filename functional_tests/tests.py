@@ -14,7 +14,7 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def check_for_task_in_todo_list(self, task_text):
+    def _check_for_task_in_todo_list(self, task_text):
         start_time = time.time()
         while True:
             try:
@@ -27,7 +27,7 @@ class NewVisitorTest(LiveServerTestCase):
                     raise e
                 time.sleep(0.5)
 
-    def submit_todo_task(self, task_text):
+    def _submit_todo_task(self, task_text):
         # re-get the inputbox, since the page might have refreshed
         inputbox = self.browser.find_element_by_id('id-new-todo-item-input')
         inputbox.send_keys(task_text)
@@ -51,25 +51,60 @@ class NewVisitorTest(LiveServerTestCase):
 
         # He types "Become governor of California" into a text box as a task
         # and submits it by pressing ENTER
-        self.submit_todo_task('Become governor of California')
+        self._submit_todo_task('Become governor of California')
 
         # After submitting, he sees an updated ToDo list that looks like
         # "1: Become governor of California" as an item in a to-do list
-        self.check_for_task_in_todo_list('1. Become governor of California')
+        self._check_for_task_in_todo_list('1. Become governor of California')
 
         # Kobe then enters "Become president of the United States", as that is
         # his next task.
-        self.submit_todo_task('Become president of the United States')
+        self._submit_todo_task('Become president of the United States')
 
         # He sees the new entry on the ToDo list after the page refreshes
-        self.check_for_task_in_todo_list(
+        self._check_for_task_in_todo_list(
             '2. Become president of the United States')
 
-        # Kobe wonders whether the site will remember his list. Then he sees
-        # that the site has generated a unique URL for him -- there is some
-        # explanatory text to that effect.
-        self.fail('Finish the functional tests!')
-
-        # Kobe checks that url just to be safe.  His ToDo list is still there.
-
         # Satisfied, he starts implementing his ToDo list
+        return
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # Lebron starts a new ToDo list
+        self.browser.get(self.live_server_url)
+
+        # He adds a task, 'Get an Oscar'
+        self._submit_todo_task('Get an Oscar')
+        self._check_for_task_in_todo_list('1. Get an Oscar')
+
+        # He notices that his list has an unique URL
+        lebron_list_url = self.browser.current_url
+        self.assertRegex(lebron_list_url, '/lists/.+')
+
+        # A new user, Curry goes to the web app
+
+        # # We use a new browser session to make sure that no information
+        # # of Lebron's is coming through from cookies, etc
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Curry visits the home page; there's no sign of Lebron's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_id('body').text
+        self.assertNotIn('Get an Oscar', page_text)
+
+        # Curry then enters a task, 'Make UA the next Nike'
+        self._submit_todo_task('Make UA the next Nike')
+        self._check_for_task_in_todo_list('1. Make UA the next Nike')
+
+        # Curry's ToDo list gets its own URL
+        curry_list_url = self.browser.current_url
+        self.assertRegex(curry_list_url, '/lists/.+')
+        self.assertNotEqual(lebron_list_url, curry_list_url)
+
+        # Curry makes sure there's no trace of Lebron's list
+        page_text = self.browser.find_element_by_id('body').text
+        self.assertNotIn('Get an Oscar', page_text)
+        self.assertIn('Make UA the next Nike', page_text)
+
+        # Satisfied, both MVPs do MVP things
+        return
