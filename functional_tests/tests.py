@@ -89,7 +89,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Curry visits the home page; there's no sign of Lebron's list
         self.browser.get(self.live_server_url)
-        page_text = self.browser.find_element_by_id('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Get an Oscar', page_text)
 
         # Curry then enters a task, 'Make UA the next Nike'
@@ -102,7 +102,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotEqual(lebron_list_url, curry_list_url)
 
         # Curry makes sure there's no trace of Lebron's list
-        page_text = self.browser.find_element_by_id('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Get an Oscar', page_text)
         self.assertIn('Make UA the next Nike', page_text)
 
