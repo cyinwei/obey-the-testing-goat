@@ -1,5 +1,5 @@
 from django.db import models
 
-class Item(models.Model):
+class Task(models.Model):
     text = models.TextField(default='')
     # text = models.CharField()

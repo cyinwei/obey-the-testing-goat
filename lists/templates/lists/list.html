@@ -3,12 +3,17 @@
         <title>Awesome To-Do Lists!</title>
     </head>
     <body>
-        <h1>Begin your journey with Awesome To-Do Lists!</h1>
+        <h1>Awesome To-Do Lists!</h1>
         <form method="POST" action="/lists/new">
             <input id="id-new-todo-item-input"
                    name="new-todo-item"
                    placeholder="Enter the vision you wish to bring to reality" />
             {% csrf_token %}
         </form>
+        <table id="id-todo-list">
+            {% for task in tasks %}
+                <tr><td>{{ forloop.counter }}. {{ task.text }}</td></tr>
+            {% endfor %}
+        </table>
     </body>
 </html>
