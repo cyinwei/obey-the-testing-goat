@@ -1,5 +1,5 @@
 from django.test import TestCase
-from lists.models import Task
+from lists.models import Task, List
 
 
 class HomePageTest(TestCase):
@@ -27,25 +27,6 @@ class NewListTest(TestCase):
         self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
 
 
-class TaskModelTest(TestCase):
-    def test_saving_and_retrieving_items(self):
-        first_item = Task()
-        first_item.text = 'The first (ever) item'
-        first_item.save()
-
-        second_item = Task()
-        second_item.text = 'The second item'
-        second_item.save()
-
-        saved_items = Task.objects.all()
-        self.assertEqual(saved_items.count(), 2)
-
-        first_saved_item = saved_items[0]
-        second_saved_item = saved_items[1]
-        self.assertEqual(first_saved_item.text, 'The first (ever) item')
-        self.assertEqual(second_saved_item.text, 'The second item')
-
-
 class ListViewTest(TestCase):
     def test_uses_list_template(self):
         pass
@@ -54,9 +35,41 @@ class ListViewTest(TestCase):
         # self.assertTemplateUsed(response, 'lists/list.html')
 
     def test_displays_only_tasks_for_that_list(self):
-        Task.objects.create(text='make breakfast')
-        Task.objects.create(text='learn TDD')
+        parent_list = List.objects.create()
+        Task.objects.create(text='make breakfast', parent_list=parent_list)
+        Task.objects.create(text='learn TDD', parent_list=parent_list)
 
         response = self.client.get('/lists/the-only-list-in-the-world/')
         self.assertContains(response, 'make breakfast')
         self.assertContains(response, 'learn TDD')
+
+
+class ListAndTaskModelTest(TestCase):
+    def test_saving_and_retrieving_items(self):
+        first_list = List()
+        first_list.save()
+
+        first_item = Task()
+        first_item.text = 'The first (ever) item'
+        first_item.parent_list = first_list
+        first_item.save()
+
+        second_item = Task()
+        second_item.text = 'The second item'
+        second_item.parent_list = first_list
+        second_item.save()
+
+        saved_list = List.objects.first()
+        self.assertEqual(saved_list, first_list)
+
+        saved_items = Task.objects.all()
+        self.assertEqual(saved_items.count(), 2)
+
+        first_saved_item = saved_items[0]
+        second_saved_item = saved_items[1]
+        self.assertEqual(first_saved_item.text, 'The first (ever) item')
+        self.assertEqual(second_saved_item.text, 'The second item')
+        self.assertEqual(first_saved_item.parent_list, first_list)
+        self.assertEqual(second_saved_item.parent_list, first_list)
+
+
