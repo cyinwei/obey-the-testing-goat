@@ -21,27 +21,59 @@ class NewListTest(TestCase):
         newly_added_item = Task.objects.first()
         self.assertEqual(newly_added_item.text, 'A new todo task')
 
-    def test_request_redirects_after_POST(self):
-        response = self.client.post(
-            '/lists/new', data={'new-todo-item': 'The second todo task'})
-        self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
+
+class NewItemTest(TestCase):
+    def test_can_save_a_POST_request_to_an_existing_list(self):
+        learn_list = List.objects.create()
+
+        self.client.post(f'/lists/{learn_list.id}/add_task',
+                         data={'new-todo-item': 'Learn Elm'})
+
+        self.assertEqual(Task.objects.count(), 1)
+        new_task = Task.objects.first()
+        self.assertEqual(new_task.text, 'Learn Elm')
+        self.assertEqual(new_task.parent_list, learn_list)
+
+    def test_redirects_to_list_view(self):
+        learn_list = List.objects.create()
+
+        response = self.client.post(f'/lists/{learn_list.id}/add_task',
+                                    data={'new-todo-item': 'Learn Elm'})
+
+        self.assertRedirects(response, f'/lists/{learn_list.id}/')
 
 
 class ListViewTest(TestCase):
     def test_uses_list_template(self):
-        pass
-        # todo_list = List.objects.create()
-        # response = self.client.get(f'/lists/{todo_list.id}')
-        # self.assertTemplateUsed(response, 'lists/list.html')
+        todo_list = List.objects.create()
+        response = self.client.get(f'/lists/{todo_list.id}/')
+        self.assertTemplateUsed(response, 'lists/list.html')
 
     def test_displays_only_tasks_for_that_list(self):
-        parent_list = List.objects.create()
-        Task.objects.create(text='make breakfast', parent_list=parent_list)
-        Task.objects.create(text='learn TDD', parent_list=parent_list)
+        chore_list = List.objects.create()
+        Task.objects.create(text='make breakfast', parent_list=chore_list)
+        Task.objects.create(text='wash dishes', parent_list=chore_list)
 
-        response = self.client.get('/lists/the-only-list-in-the-world/')
-        self.assertContains(response, 'make breakfast')
-        self.assertContains(response, 'learn TDD')
+        learn_list = List.objects.create()
+        Task.objects.create(text='do ch. 7 of obey the testing goat',
+                            parent_list=learn_list)
+        Task.objects.create(text='do ch. 8 of obey the testing goat',
+                            parent_list=learn_list)
+
+        chore_page_response = self.client.get(f'/lists/{chore_list.id}/')
+        self.assertContains(chore_page_response, 'make breakfast')
+        self.assertContains(chore_page_response, 'wash dishes')
+        self.assertNotContains(chore_page_response,
+                               'do ch. 7 of obey the testing goat')
+        self.assertNotContains(chore_page_response,
+                               'do ch. 8 of obey the testing goat')
+
+    def test_passes_correct_list_to_template(self):
+        chore_list = List.objects.create()
+        learn_list = List.objects.create()
+        response = self.client.get(f'/lists/{learn_list.id}/')
+        self.assertNotEqual(response.context['parent_list'], chore_list)
+        self.assertEqual(response.context['parent_list'], learn_list)
 
 
 class ListAndTaskModelTest(TestCase):
@@ -71,5 +103,4 @@ class ListAndTaskModelTest(TestCase):
         self.assertEqual(second_saved_item.text, 'The second item')
         self.assertEqual(first_saved_item.parent_list, first_list)
         self.assertEqual(second_saved_item.parent_list, first_list)
-
 

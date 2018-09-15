@@ -4,14 +4,14 @@
     </head>
     <body>
         <h1>Awesome To-Do Lists!</h1>
-        <form method="POST" action="/lists/new">
+        <form method="POST" action="/lists/{{ parent_list.id }}/add_task">
             <input id="id-new-todo-item-input"
                    name="new-todo-item"
                    placeholder="Enter the vision you wish to bring to reality" />
             {% csrf_token %}
         </form>
         <table id="id-todo-list">
-            {% for task in tasks %}
+            {% for task in parent_list.task_set.all %}
                 <tr><td>{{ forloop.counter }}. {{ task.text }}</td></tr>
             {% endfor %}
         </table>
