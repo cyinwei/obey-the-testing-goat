@@ -3,6 +3,7 @@ geckodriver.log
 
 # django
 *.sqlite3
+/static/
 
 # python
 *.pyc
