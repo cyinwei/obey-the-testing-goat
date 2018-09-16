@@ -10,3 +10,6 @@ geckodriver.log
 
 # venv
 .venv/
+
+# osx
+.DS_Store

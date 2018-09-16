@@ -5,7 +5,7 @@
 {% block form_action %}/lists/{{ parent_list.id }}/add_task{% endblock %}
 
 {% block todo_list %}
-<table id="id-todo-list">
+<table id="id-todo-list" class="table">
   {% for task in parent_list.task_set.all %}
     <tr><td>{{ forloop.counter }}. {{ task.text }}</td></tr>
   {% endfor %}

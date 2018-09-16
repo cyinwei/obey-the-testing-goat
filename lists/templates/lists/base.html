@@ -1,16 +1,38 @@
-<html>
+<!doctype html>
+<html lang="en">
     <head>
+        <!-- required meta tags from bootstrap4 -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap4 CSS -->
+        <link href="/static/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="/static/base.css" rel="stylesheet">
         <title>Awesome To-Do Lists!</title>
     </head>
     <body>
-        <h1>{% block header_text%}{% endblock %}</h1>
-        <form method="POST" action="{% block form_action %}{% endblock %}">
-            <input id="id-new-todo-item-input"
-                   name="new-todo-item"
-                   placeholder="Enter the vision you wish to bring to reality" />
-            {% csrf_token %}
-        </form>
-        {% block todo_list %}
-        {% endblock %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 jumbotron">
+                    <div class="text-center">
+                        <h1>{% block header_text%}{% endblock %}</h1>
+                        <form method="POST" action="{% block form_action %}{% endblock %}">
+                            <input id="id-new-todo-item-input"
+                                   name="new-todo-item"
+                                   class="form-control input-lg"
+                                   placeholder="Enter the vision you wish to bring to reality" />
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    {% block todo_list %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
     </body>
 </html>
