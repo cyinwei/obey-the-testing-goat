@@ -39,9 +39,9 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
 
         # He looks as the title and confirms he's on the right URL
-        self.assertIn('Awesome To-Do Lists', self.browser.title)
+        self.assertIn('Awesome To-Do List', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Awesome To-Do Lists', header_text)
+        self.assertIn('Awesome To-Do List', header_text)
 
         # Kobe sees an invitation to enter a ToDo task
         inputbox = self.browser.find_element_by_id('id-new-todo-item-input')
@@ -108,3 +108,15 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Satisfied, both MVPs do MVP things
         return
+
+    def test_layout_and_styling(self):
+        # Donavan Mitchell goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # He notices the ToDo input box is nicely centered
+        inputbox = self.browser.find_element_by_id('id-new-todo-item-input')
+        self.assertAlmostEqual(inputbox.location['x']
+                               + inputbox.size['width'] / 2,
+                               512,
+                               delta=10)

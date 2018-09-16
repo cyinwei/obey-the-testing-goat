@@ -1,19 +1,13 @@
-<html>
-    <head>
-        <title>Awesome To-Do Lists!</title>
-    </head>
-    <body>
-        <h1>Awesome To-Do Lists!</h1>
-        <form method="POST" action="/lists/{{ parent_list.id }}/add_task">
-            <input id="id-new-todo-item-input"
-                   name="new-todo-item"
-                   placeholder="Enter the vision you wish to bring to reality" />
-            {% csrf_token %}
-        </form>
-        <table id="id-todo-list">
-            {% for task in parent_list.task_set.all %}
-                <tr><td>{{ forloop.counter }}. {{ task.text }}</td></tr>
-            {% endfor %}
-        </table>
-    </body>
-</html>
+{% extends 'lists/base.html' %}
+
+{% block header_text %}Your Awesome To-Do List!{% endblock %}
+
+{% block form_action %}/lists/{{ parent_list.id }}/add_task{% endblock %}
+
+{% block todo_list %}
+<table id="id-todo-list">
+  {% for task in parent_list.task_set.all %}
+    <tr><td>{{ forloop.counter }}. {{ task.text }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

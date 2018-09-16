@@ -1,14 +1,5 @@
-<html>
-    <head>
-        <title>Awesome To-Do Lists!</title>
-    </head>
-    <body>
-        <h1>Begin your journey with Awesome To-Do Lists!</h1>
-        <form method="POST" action="/lists/new">
-            <input id="id-new-todo-item-input"
-                   name="new-todo-item"
-                   placeholder="Enter the vision you wish to bring to reality" />
-            {% csrf_token %}
-        </form>
-    </body>
-</html>
+{% extends 'lists/base.html' %}
+
+{% block header_text %}Start an Awesome To-Do List!{% endblock %}
+
+{% block form_action %}/lists/new{% endblock %}
