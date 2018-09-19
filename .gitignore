@@ -9,8 +9,9 @@ geckodriver.log
 *.pyc
 .pytest_cache/
 
-# venv
+# env, venv
 .venv/
+.env
 
 # osx
 .DS_Store
