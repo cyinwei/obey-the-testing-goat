@@ -24,10 +24,10 @@ if 'DJANGO_DEBUG_FALSE' in os.environ:
     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
     ALLOWED_HOSTS = [os.environ['SITENAME']]
 else:
-    # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = 'insecure-secret-key-for-dev'
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = 'insecure-secret-key-for-dev'
     ALLOWED_HOSTS = []
 
 
@@ -35,7 +35,7 @@ else:
 
 INSTALLED_APPS = [
     # 'django.contrib.admin',
-    'django.contrib.auth'
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
