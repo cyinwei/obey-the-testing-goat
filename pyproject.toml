@@ -7,6 +7,9 @@ authors = ["Charlie Zhang <yinwei.c.zhang@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.6"
 django = "1.11"
+pip = "^18.0"
+python-dotenv = "^0.9.1"
+gunicorn = "^19.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0" 
